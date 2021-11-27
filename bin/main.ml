@@ -14,4 +14,4 @@ let () =
           bslide ~title:"Second heading" ~text:"this is a text";
         ]
   in
-  print_endline @@ SlideShow.present slideshow
+  SlideShow.present slideshow

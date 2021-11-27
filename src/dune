@@ -1,2 +1,3 @@
 (library
- (name Laius))
+ (name Laius)
+ (libraries lambda-term lwt))

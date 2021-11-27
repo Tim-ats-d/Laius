@@ -9,6 +9,7 @@ homepage: "https://github.com/Tim-ats-d/Laius"
 bug-reports: "https://github.com/Tim-ats-d/Laius/issues"
 depends: [
   "dune" {>= "2.9"}
+  "lambda-term"
   "ocaml" {>= "4.11"}
   "odoc" {with-doc}
 ]

@@ -23,5 +23,6 @@
  (name laius)
  (synopsis "Terminal-based presentations in pure OCaml ")
  (depends
+  lambda-term
   (ocaml
    (>= 4.11))))
