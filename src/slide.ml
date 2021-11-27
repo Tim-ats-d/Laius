@@ -2,13 +2,13 @@ open Utils
 
 type t = TitleSlide | TocSlide of { title : string } | Slide of slide
 
-and slide = { title : string; text : string; border : string }
+and slide = { title : string; text : string }
 
 let title = TitleSlide
 
 let toc ~title = TocSlide { title }
 
-let slide ?(border = "") ~title ~text = Slide { title; text; border }
+let slide ~title ~text = Slide { title; text }
 
 let collect_header = function
   | TitleSlide -> None
@@ -37,11 +37,10 @@ and render_toc { Context.heading; slide_nb; _ } n ~title =
       ("numb", Formatting.numbering n ~on:slide_nb);
     ]
 
-and render_slide { Context.slide_nb; _ } n { title; text; border } =
+and render_slide { Context.slide_nb; _ } n { title; text } =
   Formatting.map
     [
       ("heading", title);
       ("text", text);
-      ("border", String.value border ~default:"none");
       ("numb", Formatting.numbering n ~on:slide_nb);
     ]

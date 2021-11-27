@@ -1,15 +1,3 @@
-class status_bar (slideshow : Context.t) =
-  object (self)
-    inherit LTerm_widget.label "statusbar"
-
-    method format = Printf.sprintf "%i/%i" slideshow.progress slideshow.slide_nb
-
-    method! can_focus = false
-
-    method! draw ctx _ =
-      LTerm_draw.draw_string ctx 0 0 @@ Zed_string.of_utf8 self#format
-  end
-
 let loop wakener ~ctx ~slides ~draw =
   let _ = slides in
   (* TODO *)
@@ -31,18 +19,20 @@ let loop wakener ~ctx ~slides ~draw =
       | _ -> false)
   | _ -> false
 
-let launch ctx slides () =
+let launch ctx slides widgets () =
   let waiter, wakener = Lwt.wait () in
 
-  let main = new LTerm_widget.label "Main interface"
-  and statusbar = new status_bar ctx in
+  let main = new LTerm_widget.label "Presentation"
+  and statusbar = new LTerm_widget.hbox in
+  List.iter (fun widget -> statusbar#add (widget ctx)) widgets;
 
   let vbox = new LTerm_widget.vbox in
   vbox#add main;
   vbox#add ~expand:false statusbar;
 
   vbox#on_event
-    (loop wakener ~ctx ~slides ~draw:(fun () -> statusbar#queue_draw));
+    (loop wakener ~ctx ~slides ~draw:(fun () ->
+         List.iter (fun s -> s#queue_draw) statusbar#children));
 
   Lwt.(
     Lazy.force LTerm.stdout >>= fun term -> LTerm_widget.run term vbox waiter)
