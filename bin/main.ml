@@ -9,7 +9,7 @@ let () =
       Slide.
         [
           title;
-          toc;
+          toc ~title:"Table of contents";
           bslide ~title:"Heading" ~text:"this is a text";
           bslide ~title:"Second heading" ~text:"this is a text";
         ]

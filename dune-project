@@ -21,6 +21,7 @@
 
 (package
  (name laius)
+ (synopsis "Terminal-based presentations in pure OCaml ")
  (depends
   (ocaml
    (>= 4.11))))
