@@ -7,9 +7,13 @@ type t = private {
   headers : string list;
 }
 
-val incr_progress : t -> unit
+val first : t -> unit
 
-val decr_progress : t -> unit
+val last : t -> unit
+
+val forward : ?n:int -> t -> unit
+
+val backward : ?n:int -> t -> unit
 
 val create :
   title:string ->
