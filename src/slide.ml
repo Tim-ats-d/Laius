@@ -1,12 +1,10 @@
-open Utils
+type t = TitleSlide | TocSlide of { heading : string } | Slide of slide
 
-type t = TitleSlide | TocSlide of { title : string } | Slide of slide
-
-and slide = { title : string; text : string }
+and slide = { title : string; text : Text.t list }
 
 let title = TitleSlide
 
-let toc ~title = TocSlide { title }
+let toc ~heading = TocSlide { heading }
 
 let slide ~title ~text = Slide { title; text }
 
@@ -15,32 +13,7 @@ let collect_header = function
   | TocSlide _ -> None
   | Slide { title; _ } -> Some title
 
-let rec render ctx n = function
-  | TitleSlide -> render_title ctx n
-  | TocSlide { title; _ } -> render_toc ctx n ~title
-  | Slide s -> render_slide ctx n s
-
-and render_title { Context.title; author; date; slide_nb; _ } n =
-  Formatting.map
-    [
-      ("title", title);
-      ("author", String.value author ~default:"none");
-      ("date", String.value date ~default:"none");
-      ("numb", Formatting.numbering n ~on:slide_nb);
-    ]
-
-and render_toc { Context.heading; slide_nb; _ } n ~title =
-  Formatting.map
-    [
-      ("title", title);
-      ("toc", String.concat "\n" heading);
-      ("numb", Formatting.numbering n ~on:slide_nb);
-    ]
-
-and render_slide { Context.slide_nb; _ } n { title; text } =
-  Formatting.map
-    [
-      ("heading", title);
-      ("text", text);
-      ("numb", Formatting.numbering n ~on:slide_nb);
-    ]
+let render ctx = function
+  | TitleSlide -> new Slide_widget.title ctx
+  | TocSlide { heading } -> new Slide_widget.toc ctx heading
+  | Slide { title; text } -> new Slide_widget.slide title (Text.eval text)
